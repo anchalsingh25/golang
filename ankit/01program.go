@@ -16,29 +16,49 @@ type Movie struct {
 	NumberOfRatings int
 }
 
-type ByDuration []*Movie
+type ByDurationAndTitle []*Movie
 
-func (a ByDuration) Len() int           { return len(a) }
-func (a ByDuration) Less(i, j int) bool { return a[i].Duration > a[j].Duration }
-func (a ByDuration) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByDurationAndTitle) Len() int      { return len(a) }
+func (a ByDurationAndTitle) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByDurationAndTitle) Less(i, j int) bool {
+	if a[i].Duration == a[j].Duration {
+		return a[i].Title < a[j].Title
+	}
+	return a[i].Duration > a[j].Duration
+}
 
-type ByYear []*Movie
+type ByYearAndTitle []*Movie
 
-func (a ByYear) Len() int           { return len(a) }
-func (a ByYear) Less(i, j int) bool { return a[i].Year > a[j].Year }
-func (a ByYear) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByYearAndTitle) Len() int      { return len(a) }
+func (a ByYearAndTitle) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByYearAndTitle) Less(i, j int) bool {
+	if a[i].Year == a[j].Year {
+		return a[i].Title < a[j].Title
+	}
+	return a[i].Year > a[j].Year
+}
 
-type ByRating []*Movie
+type ByRatingAndTitle []*Movie
 
-func (a ByRating) Len() int           { return len(a) }
-func (a ByRating) Less(i, j int) bool { return a[i].AverageRating > a[j].AverageRating }
-func (a ByRating) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByRatingAndTitle) Len() int      { return len(a) }
+func (a ByRatingAndTitle) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByRatingAndTitle) Less(i, j int) bool {
+	if a[i].AverageRating == a[j].AverageRating {
+		return a[i].Title < a[j].Title
+	}
+	return a[i].AverageRating > a[j].AverageRating
+}
 
-type ByNumRatings []*Movie
+type ByNumRatingsAndTitle []*Movie
 
-func (a ByNumRatings) Len() int           { return len(a) }
-func (a ByNumRatings) Less(i, j int) bool { return a[i].NumberOfRatings > a[j].NumberOfRatings }
-func (a ByNumRatings) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByNumRatingsAndTitle) Len() int      { return len(a) }
+func (a ByNumRatingsAndTitle) Swap(i, j int) { a[i], a[j] = a[j], a[i] }
+func (a ByNumRatingsAndTitle) Less(i, j int) bool {
+	if a[i].NumberOfRatings == a[j].NumberOfRatings {
+		return a[i].Title < a[j].Title
+	}
+	return a[i].NumberOfRatings > a[j].NumberOfRatings
+}
 
 func openFile(fileName string) *os.File {
 	file, err := os.Open(fileName)
@@ -93,26 +113,25 @@ func main() {
 		movies[movieID-1].NumberOfRatings = numRatings
 	}
 
-	// Sort and print the top 5 movies based on different criteria
-	sort.Sort(ByDuration(movies))
+	sort.Sort(ByDurationAndTitle(movies))
 	fmt.Println("Top 5 Movies based on Duration:")
 	for i := 0; i < 5 && i < len(movies); i++ {
 		fmt.Printf("%s; Duration In Minutes: %d\n", movies[i].Title, movies[i].Duration)
 	}
 
-	sort.Sort(ByYear(movies))
+	sort.Sort(ByYearAndTitle(movies))
 	fmt.Println("\nTop 5 Movies based on Year of Release:")
 	for i := 0; i < 5 && i < len(movies); i++ {
 		fmt.Printf("%s; Year of Release: %d\n", movies[i].Title, movies[i].Year)
 	}
 
-	sort.Sort(ByRating(movies))
+	sort.Sort(ByRatingAndTitle(movies))
 	fmt.Println("\nTop 5 Movies based on Average Rating:")
 	for i := 0; i < 5 && i < len(movies); i++ {
 		fmt.Printf("%s; Average Rating: %.3f\n", movies[i].Title, movies[i].AverageRating)
 	}
 
-	sort.Sort(ByNumRatings(movies))
+	sort.Sort(ByNumRatingsAndTitle(movies))
 	fmt.Println("\nTop 5 Movies based on Number of Ratings Given:")
 	for i := 0; i < 5 && i < len(movies); i++ {
 		fmt.Printf("%s; Number of Ratings: %d\n", movies[i].Title, movies[i].NumberOfRatings)
